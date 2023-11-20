@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string>
 using namespace std;
-nt choice;
+
+int choice;
 
 struct Disciplines
 {
