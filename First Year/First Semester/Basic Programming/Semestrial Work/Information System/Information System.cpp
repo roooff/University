@@ -1,15 +1,7 @@
-//write a computer program implementing an information system that
-//maintains a student group(faculty number, social security number, three names, list of disciplines, gender,
-//	age, status - active / discontinued / graduated).The program stores and processes data for
-//	the students in the group.The maximum number of students in a group is 30. Each student has 5
-//	grades in the disciplines(name, grade) from 1 semester
-// Information System.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
-
 #include <iostream>
 #include <string>
 using namespace std;
-int choice;
+nt choice;
 
 struct Disciplines
 {
@@ -32,7 +24,6 @@ struct Students
 const int maxStudents = 30;
 Students students[maxStudents];
 int currentStudents = 0;
-
 void AddStudent()
 {
 	int numStudentsToAdd;
@@ -158,5 +149,4 @@ int main() {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
-
 
