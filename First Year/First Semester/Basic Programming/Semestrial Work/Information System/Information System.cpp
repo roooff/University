@@ -1,163 +1,27 @@
-#include <fstream>
 #include <iostream>
 #include <string>
 using namespace std;
 int choice;
-
 struct Disciplines
 {
 	string name;
-	int grade = 0;
+	int grade;
 };
 struct Students
 {
-	int facultyNumber = 0;
-	int socialSecurityNumber = 0;
+	int facultyNumber;
+	int socialSecurityNumber;
 	string firstName;
 	string middName;
 	string gender;
-	int age = 0;
+	int age;
 	string status;
-	float averageGrade=0.00;
 	Disciplines disciplines[5];
 
 };
 const int maxStudents = 30;
 Students students[maxStudents];
 int currentStudents = 0;
-void bubbleSortByFacultyNumber(Students arr[], int n) {
-	for (int i = 0; i < n - 1; ++i) {
-		for (int j = 0; j < n - i - 1; ++j) {
-			if (arr[j].facultyNumber > arr[j + 1].facultyNumber) {
-				swap(arr[j], arr[j + 1]);
-			}
-		}
-	}
-}
-void DisplayStudents(Students arr[], int count) {
-	cout << "Faculty Number\tSocial Security Number\tFirst Name\tMiddle Name\tGender\tAge\tStatus" << endl;
-	for (int i = 0; i < count; ++i) {
-		cout << arr[i].facultyNumber << "\t\t" << arr[i].socialSecurityNumber << "\t\t\t"
-			<< arr[i].firstName << "\t\t" << arr[i].middName << "\t\t" << arr[i].gender << "\t"
-			<< arr[i].age << "\t" << arr[i].status << endl;
-	}
-}
-void selectionSortBySSN(Students arr[], int n) {
-	for (int i = 0; i < n - 1; ++i) {
-		int minIndex = i;
-		for (int j = i + 1; j < n; ++j) {
-			if (arr[j].socialSecurityNumber < arr[minIndex].socialSecurityNumber) {
-				minIndex = j;
-			}
-		}
-		if (minIndex != i) {
-			swap(arr[i], arr[minIndex]);
-		}
-	}
-}
-void FilterAndSortByGPARange() {
-	float minGPA, maxGPA;
-	cout << "Enter the minimum and maximum GPA range (min max): ";
-	cin >> minGPA >> maxGPA;
-
-	Students filteredStudents[maxStudents];
-	int filteredCount = 0;
-	for (int i = 0; i < currentStudents; ++i) {
-		
-		float totalGrade = 0.0;
-		for (int j = 0; j < 5; ++j) {
-			totalGrade += students[i].disciplines[j].grade;
-		}
-		float GPA = totalGrade / 5.0;
-
-		if (GPA >= minGPA && GPA <= maxGPA) {
-			filteredStudents[filteredCount++] = students[i];
-		}
-	}
-
-	
-	selectionSortBySSN(filteredStudents, filteredCount);
-
-	
-	DisplayStudents(filteredStudents, filteredCount);
-}
-void FilterAndSortByStatus() {
-	string status;
-	cout << "Enter the status (Active/Interrupted/Graduated): ";
-	cin >> status;
-
-	Students filteredStudents[maxStudents];
-	int filteredCount = 0;
-	for (int i = 0; i < currentStudents; ++i) {
-		if (students[i].status == status) {
-			filteredStudents[filteredCount++] = students[i];
-		}
-	}
-
-	
-	bubbleSortByFacultyNumber(filteredStudents, filteredCount);
-
-	
-	DisplayStudents(filteredStudents, filteredCount);
-}
-void LoadStudentsFromFile() {
-	ifstream inputFile("C:\\Users\\rooof\\Documents\\students.txt");
-
-	if (!inputFile.is_open()) {
-		cout << "Error opening the file!" << endl;
-		return;
-	}
-
-
-	while (!inputFile.eof()) {
-		Students newStudent;
-		inputFile >> newStudent.facultyNumber >> newStudent.socialSecurityNumber
-			>> newStudent.firstName >> newStudent.middName
-			>> newStudent.gender >> newStudent.age
-			>> newStudent.status;
-
-		for (int i = 0; i < 5; ++i) {
-			inputFile >> newStudent.disciplines[i].name >> newStudent.disciplines[i].grade;
-		}
-
-
-		if (!inputFile.fail()) {
-			students[currentStudents] = newStudent;
-			currentStudents++;
-		}
-	}
-
-	inputFile.close();
-	cout << "Students' information loaded from the file 'students.txt'." << endl;
-}
-void SaveStudentsToFile() {
-	ofstream outputFile("C:\\Users\\rooof\\Documents\\students.txt");
-
-	if (!outputFile.is_open()) {
-		cout << "Error opening the file!" << endl;
-		return;
-	}
-
-
-	for (int i = 0; i < currentStudents; ++i) {
-		outputFile << students[i].facultyNumber << " "
-			<< students[i].socialSecurityNumber << " "
-			<< students[i].firstName << " "
-			<< students[i].middName << " "
-			<< students[i].gender << " "
-			<< students[i].age << " "
-			<< students[i].status << " ";
-
-		for (int j = 0; j < 5; ++j) {
-			outputFile << students[i].disciplines[j].name << " "
-				<< students[i].disciplines[j].grade << " ";
-		}
-		outputFile << endl;
-	}
-
-	outputFile.close();
-	cout << "Students' information saved to the file 'students.txt'." << endl;
-}
 void AddStudent() {
 	int studentsToAdd = 0;
 	cout << "Enter the number of students to add: ";
@@ -183,20 +47,10 @@ void AddStudent() {
 			students[currentStudents] = newStudent;
 			currentStudents++;
 			cout << "Student added successfully!" << endl;
-			cout << "Enter information for 5 disciplines (name and grade):" << endl;
-			for (int i = 0; i < 5; ++i)
-			{
-				cout << "Discipline " << i + 1 << " name: ";
-				cin >> newStudent.disciplines[i].name;
-				cout << "Grade for " << newStudent.disciplines[i].name << ": ";
-				cin >> newStudent.disciplines[i].grade;
-
-			}
-
 		}
 		else {
 			cout << "No more space for students!" << endl;
-			break;
+			break; // Exit the loop if the maximum limit is reached
 		}
 	}
 }
@@ -206,9 +60,8 @@ void SortStudentsByMiddleName() {
 		return;
 	}
 
-
-	for (int i = 0; i < currentStudents - 1; ++i)
-	{
+	// Selection sort algorithm to sort students by middle name
+	for (int i = 0; i < currentStudents - 1; ++i) {
 		int minIndex = i;
 		for (int j = i + 1; j < currentStudents; ++j) {
 			if (students[j].middName < students[minIndex].middName) {
@@ -216,20 +69,21 @@ void SortStudentsByMiddleName() {
 			}
 		}
 		if (minIndex != i) {
-
+			// Swap students if needed
 			Students temp = students[i];
 			students[i] = students[minIndex];
 			students[minIndex] = temp;
 		}
 	}
 
-
+	// Display the sorted list of students
 	cout << "Students sorted by middle name in alphabetical order:" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
 		cout << "Name: " << students[i].firstName << " " << students[i].middName << endl;
-
+		// Display other student details as needed
 	}
 }
+
 void SearchStudentsByGradeRange() {
 	int minGrade, maxGrade;
 	string subjectName = "Basic Programming";
@@ -246,7 +100,7 @@ void SearchStudentsByGradeRange() {
 			if (students[i].disciplines[j].name == subjectName && students[i].disciplines[j].grade >= minGrade && students[i].disciplines[j].grade <= maxGrade) {
 				cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].middName << ", Grade: " << students[i].disciplines[j].grade << endl;
 				found = true;
-				break;
+				break; // Only display each student once
 			}
 		}
 	}
@@ -256,16 +110,16 @@ void SearchStudentsByGradeRange() {
 	}
 }
 void SearchStudentsByPoorGrades() {
-	int weakGrade = 2;
+	int weakGrade = 2; // Weak grade
 
 	bool found = false;
 	cout << "Students with at least one subject graded as " << weakGrade << ":" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
-		bool studentFound = false;
+		bool studentFound = false; // Flag to check if the student has at least one subject with Weak 2 grade
 		for (int j = 0; j < 5; ++j) {
 			if (students[i].disciplines[j].grade == weakGrade) {
 				studentFound = true;
-				break;
+				break; // If Weak 2 grade is found for the student, no need to check further
 			}
 		}
 		if (studentFound) {
@@ -278,72 +132,10 @@ void SearchStudentsByPoorGrades() {
 		cout << "No students found with at least one subject graded as " << weakGrade << endl;
 	}
 }
-void UpdateGradesAndAverage() {
-	int facNumber;
-	cout << "Enter the faculty number of the student: ";
-	cin >> facNumber;
 
-	bool found = false;
-	for (int i = 0; i < currentStudents; ++i) {
-		if (students[i].facultyNumber == facNumber) {
-			found = true;
-			if (students[i].status == "Active") {
-				float totalGrade = 0.0;
-				int updated = 0;
-				for (int j = 0; j < 5; ++j) {
-					cout << "Enter grade for discipline " << students[i].disciplines[j].name << ": ";
-					int newGrade;
-					cin >> newGrade;
-					if (newGrade >= 2 && newGrade <= 6) {
-						totalGrade += newGrade;
-						students[i].disciplines[j].grade = newGrade;
-						++updated;
-					}
-				}
-				students[i].averageGrade = totalGrade / updated;
-				cout << "Updated grades and average grade for student with faculty number " << facNumber << endl;
-			}
-			else {
-				cout << "Cannot update grades. The student's status is not Active." << endl;
-			}
-			break;
-		}
-	}
-	if (!found) {
-		cout << "Student with faculty number " << facNumber << " not found." << endl;
-	}
-}
-void ChangeStatusByFacultyNumber() {
-	int facNumber;
-	cout << "Enter the faculty number of the student: ";
-	cin >> facNumber;
 
-	bool found = false;
-	for (int i = 0; i < currentStudents; ++i) {
-		if (students[i].facultyNumber == facNumber) {
-			found = true;
-			if (students[i].status != "Graduated") {
-				string newStatus;
-				cout << "Enter the new status (Active/Interrupted/Graduated): ";
-				cin >> newStatus;
-				if (newStatus == "Active" || newStatus == "Interrupted") {
-					students[i].status = newStatus;
-					cout << "Status updated for student with faculty number " << facNumber << endl;
-				}
-				else {
-					cout << "Invalid status. Status remains unchanged." << endl;
-				}
-			}
-			else {
-				cout << "Cannot change status. The student's status is Graduated." << endl;
-			}
-			break;
-		}
-	}
-	if (!found) {
-		cout << "Student with faculty number " << facNumber << " not found." << endl;
-	}
-}
+
+
 void DisplayAllStudents() {
 	if (currentStudents == 0) {
 		cout << "No students in the database." << endl;
@@ -377,6 +169,7 @@ void DisplayAllStudents() {
 
 	cout << "========================================================================================================================================================================================================================================================" << endl;
 }
+
 void DisplayMenu() {
 	cout << "Menu:" << endl;
 	cout << "1. Add a student" << endl;
@@ -384,13 +177,9 @@ void DisplayMenu() {
 	cout << "3. Search students by grade range for Basic Programming" << endl;
 	cout << "4. Search students with at least one subject graded as Weak 2" << endl;
 	cout << "5. Sort students by middle name" << endl;
-	cout << "6. Save students' information to file" << endl;
-	cout << "7. Load students' information from file" << endl;
-	cout << "8. Filter students by status and sort by faculty number" << endl;
-	cout << "9. Filter students by GPA range and sort by social security number" << endl;
-	cout << "10. Update grades and average for a student" << endl;
-	cout << "11. Change status for a student" << endl;
+	cout << "6. Exit" << endl;
 }
+
 int main() {
 	char choice = '0';
 
@@ -407,40 +196,22 @@ int main() {
 			DisplayAllStudents();
 			break;
 		case '3':
-			SearchStudentsByGradeRange();
+			SearchStudentsByGradeRange(); // Function to search by grade range for Basic Programming
 			break;
 		case '4':
-			SearchStudentsByPoorGrades();
+			SearchStudentsByPoorGrades(); // Function to search for students with Weak 2 grade
 			break;
 		case '5':
-			SortStudentsByMiddleName();
+			SortStudentsByMiddleName(); // Function to sort students by middle name
 			break;
 		case '6':
-			SaveStudentsToFile();
 			cout << "Exiting the program. Goodbye!" << endl;
-			break;
-		case '7':
-			LoadStudentsFromFile();
-			break;
-
-		case '8':
-			FilterAndSortByStatus();
-			break;
-
-		case '9':
-			FilterAndSortByGPARange();
-			break;
-		case '10':
-			UpdateGradesAndAverage();
-			break;
-
-		case '11':
-			ChangeStatusByFacultyNumber();
 			break;
 		default:
 			cout << "Invalid choice. Please enter a valid option." << endl;
 			break;
 		}
 	}
+
 	return 0;
 }
