@@ -237,7 +237,7 @@ void SaveStudentsToFile() {
 	cout << "Students' information saved to the file 'students.txt'." << endl;
 }
 void LoadDataFromFile() {
-	ifstream inputFile("students_data.txt");
+	ifstream inputFile("C:\\Users\\rooof\\Documents\\students.txt");
 
 	if (inputFile.is_open()) {
 		while (inputFile >> students[currentStudents].facultyNumber >> students[currentStudents].socialSecurityNumber
@@ -264,12 +264,12 @@ void SaveDataToFile() {
 
 	if (outputFile.is_open()) {
 		for (int i = 0; i < currentStudents; ++i) {
-			outputFile << students[i].facultyNumber << " " << students[i].socialSecurityNumber << " "
-				<< students[i].firstName << " " << students[i].middName << " "
-				<< students[i].gender << " " << students[i].age << " " << students[i].status << "\n";
+			outputFile << students[i].facultyNumber << " | " << students[i].socialSecurityNumber << " | "
+				<< students[i].firstName << " | " << students[i].middName << " | "
+				<< students[i].gender << " | " << students[i].age << " | " << students[i].status << "\n";
 
 			for (int j = 0; j < 5; ++j) {
-				outputFile << students[i].disciplines[j].name << " " << students[i].disciplines[j].grade << " ";
+				outputFile << students[i].disciplines[j].name << " | " << students[i].disciplines[j].grade << " | ";
 			}
 			outputFile << "\n";
 		}
