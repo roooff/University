@@ -357,7 +357,7 @@ void AddStudent() {
 			cin >> newStudent.facultyNumber;
 			cout << "Enter social security number: " << endl;
 			cin >> newStudent.socialSecurityNumber;
-			for (int i = 0; i < sizeof(Students); i++)
+			for (int i = 0; i <currentStudents; i++)
 			{
 				if (newStudent.socialSecurityNumber == students[i].socialSecurityNumber)
 				{
@@ -375,24 +375,43 @@ void AddStudent() {
 			cin >> newStudent.gender;
 			cout << "Enter age: " << endl;
 			cin >> newStudent.age;
-			cout << "Enter status: (Active/Dropped out/Graduated) " << endl;
-			cin >> newStudent.status;
-			if (newStudent.status != "Active" || newStudent.status != "Dropped out" || newStudent.status != "Graduated")
+			cout << "Enter status: Active-1|Dropped out-2|Graduated-3 " << endl;
+			int status = 0;
+			cin >> status;
+			switch (status)
 			{
-				cout << "Invalid status. Default status: Undefined";
-				newStudent.status = "Undefined";
+				case 1:
+					newStudent.status = "Active";
+					break;
+				case 2:
+					newStudent.status = "Dropped out";
+					break;
+				case 3:
+					newStudent.status = "Graduated";
+				break;
+			default: 
+				cout << "Invalid choice, status becomes Empty" << endl;
+					newStudent.status = "Empty";
+				break;
 			}
+			cin >> newStudent.status;
+
+			
 			students[currentStudents] = newStudent;
 			currentStudents++;
 			cout << "Student added successfully!" << endl;
-			cout << "Enter information for 5 disciplines (name and grade):" << endl;
+			cout << "Disciplines: " << endl;
+			newStudent.disciplines[0].name = "Basic Programming";
+			newStudent.disciplines[1].name = "Mathematics";
+			newStudent.disciplines[2].name = "English";
+			newStudent.disciplines[3].name = "Digital Logic";
+			newStudent.disciplines[4].name = "Electronics";
+
 			for (int i = 0; i < 5; ++i)
 			{
-				cout << "Discipline " << i + 1 << " name: ";
-				cin >> newStudent.disciplines[i].name;
-				cout << "Grade for " << newStudent.disciplines[i].name << ": ";
-				cin >> newStudent.disciplines[i].grade;
-
+				cout << "Enter Grade for :" << newStudent.disciplines[i].name << endl;
+				cin>> newStudent.disciplines[i].grade;
+				cout<<"Grade for" << newStudent.disciplines[i].name << "added succssefully" << endl;
 			}
 
 		}
