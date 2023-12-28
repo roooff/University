@@ -9,7 +9,7 @@ struct Disciplines
 {
 	string name;
 	int grade = 0;
-};
+}; 
 struct Students
 {
 	int facultyNumber ;
@@ -180,7 +180,7 @@ void SearchStudentsByPoorGrades() {
 	}
 }
 void LoadStudentsFromFile() {
-	ifstream inputFile("C:\\Users\\rooof\\Documents\\students.txt");
+	ifstream inputFile("C:\\Users\\rooof\\Documents\\load_students.txt");
 
 	if (!inputFile.is_open()) {
 		cout << "Error opening the file!" << endl;
@@ -238,7 +238,7 @@ void SaveStudentsToFile() {
 	cout << "Students' information saved to the file 'students.txt'." << endl;
 }
 void LoadDataFromFile() {
-	ifstream inputFile("C:\\Users\\rooof\\Documents\\students.txt");
+	ifstream inputFile("C:\\Users\\rooof\\Documents\\load_students.txt");
 
 	if (inputFile.is_open()) {
 		while (inputFile >> students[currentStudents].facultyNumber >> students[currentStudents].socialSecurityNumber
@@ -434,7 +434,7 @@ void DisplayAllStudents() {
 			<< setw(15) << students[i].firstName << "|" << setw(15) << students[i].lastName << "|" << setw(10) << students[i].gender << "|"
 			<< setw(5) << students[i].age << " |" << setw(10) << students[i].status << " |" << setw(10) << students[i].averageGrade << "|" << endl;
 	}
-}
+} // DONE
 
 void DisplayMenu() {
 	cout << "Menu:" << endl;
