@@ -133,27 +133,23 @@ void SortStudentsByMiddleName() {
 }
 void SearchStudentsByGradeRange() {
 	int minGrade, maxGrade;
-	string subjectName = "Basic Programming";
-
 	cout << "Enter the minimum grade for Basic Programming: ";
 	cin >> minGrade;
 	cout << "Enter the maximum grade for Basic Programming: ";
 	cin >> maxGrade;
 
 	bool found = false;
-	cout << "Students with grade in range " << minGrade << " - " << maxGrade << " for subject " << subjectName << ":" << endl;
+	cout << "Students with grade in range " << minGrade << " - " << maxGrade << " for Basic Progeamming :" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
-		for (int j = 0; j < 5; ++j) {
-			if (students[i].disciplines[j].name == subjectName && students[i].disciplines[j].grade >= minGrade && students[i].disciplines[j].grade <= maxGrade) {
-				cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].lastName << ", Grade: " << students[i].disciplines[j].grade << endl;
-				found = true;
-				break;
-			}
+		if (students[i].disciplines[0].grade >= minGrade && students[i].disciplines[0].grade <= maxGrade) {
+			cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].lastName << ", Grade: " << students[i].disciplines[0].grade << endl;
+			found = true;
+			break;
 		}
 	}
 
 	if (!found) {
-		cout << "No students found with grade in the specified range for subject " << subjectName << endl;
+		cout << "No students found with grade in the specified range for Basic Programming " << endl;
 	}
 }
 void SearchStudentsByPoorGrades() {
@@ -210,7 +206,7 @@ void LoadStudentsFromFile() {
 	cout << "Students' information loaded from the file 'students.txt'." << endl;
 }
 void SaveStudentsToFile() {
-	ofstream outputFile("C:\\Users\\rooof\\Documents\\students.txt");
+	ofstream outputFile("C:\\Users\\rooof\\Documents\\save_students.txt");
 
 	if (!outputFile.is_open()) {
 		cout << "Error opening the file!" << endl;
@@ -261,7 +257,7 @@ void LoadDataFromFile() {
 	}
 }
 void SaveDataToFile() {
-	ofstream outputFile("students_data.txt");
+	ofstream outputFile("C:\\Users\\rooof\\Documents\\save_students.txt");
 
 	if (outputFile.is_open()) {
 		for (int i = 0; i < currentStudents; ++i) {
@@ -275,6 +271,7 @@ void SaveDataToFile() {
 			outputFile << "\n";
 		}
 		outputFile.close();
+		
 	}
 	else {
 		cout << "File could not be created!" << endl;
@@ -376,8 +373,8 @@ void AddStudent() {
 			cin >> newStudent.gender;
 			cout << "Enter age: " << endl;
 			cin >> newStudent.age;
-			cout << "Enter status: Active-1|Dropped out-2|Graduated-3 " << endl;
 			int status = 0;
+			cout << "Enter status: Active-1|Dropped out-2|Graduated-3 " << endl;\
 			cin >> status;
 			switch (status)
 			{
@@ -435,7 +432,6 @@ void DisplayAllStudents() {
 			<< setw(5) << students[i].age << " |" << setw(10) << students[i].status << " |" << setw(10) << students[i].averageGrade << "|" << endl;
 	}
 } // DONE
-
 void DisplayMenu() {
 	cout << "Menu:" << endl;
 	cout << "1. Add a student" << endl;
