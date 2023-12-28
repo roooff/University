@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include<iomanip>
 using namespace std;
 int choice;
 
@@ -14,11 +15,11 @@ struct Students
 	int facultyNumber ;
 	int socialSecurityNumber;
 	string firstName;
-	string middName;
+	string lastName;
 	string gender;
 	int age;
 	string status;
-	double averageGrade = 0.00;
+	float averageGrade = 0.00;
 	Disciplines disciplines[5];
 
 };
@@ -51,7 +52,7 @@ void DisplayStudents(Students arr[], int count) {
 	cout << "Faculty Number\tSocial Security Number\tFirst Name\tMiddle Name\tGender\tAge\tStatus" << endl;
 	for (int i = 0; i < count; ++i) {
 		cout << arr[i].facultyNumber << "\t\t" << arr[i].socialSecurityNumber << "\t\t\t"
-			<< arr[i].firstName << "\t\t" << arr[i].middName << "\t\t" << arr[i].gender << "\t"
+			<< arr[i].firstName << "\t\t" << arr[i].lastName << "\t\t" << arr[i].gender << "\t"
 			<< arr[i].age << "\t" << arr[i].status << endl;
 	}
 }
@@ -111,7 +112,7 @@ void SortStudentsByMiddleName() {
 	{
 		int minIndex = i;
 		for (int j = i + 1; j < currentStudents; ++j) {
-			if (students[j].middName < students[minIndex].middName) {
+			if (students[j].lastName < students[minIndex].lastName) {
 				minIndex = j;
 			}
 		}
@@ -126,7 +127,7 @@ void SortStudentsByMiddleName() {
 
 	cout << "Students sorted by middle name in alphabetical order:" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
-		cout << "Name: " << students[i].firstName << " " << students[i].middName << endl;
+		cout << "Name: " << students[i].firstName << " " << students[i].lastName << endl;
 
 	}
 }
@@ -144,7 +145,7 @@ void SearchStudentsByGradeRange() {
 	for (int i = 0; i < currentStudents; ++i) {
 		for (int j = 0; j < 5; ++j) {
 			if (students[i].disciplines[j].name == subjectName && students[i].disciplines[j].grade >= minGrade && students[i].disciplines[j].grade <= maxGrade) {
-				cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].middName << ", Grade: " << students[i].disciplines[j].grade << endl;
+				cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].lastName << ", Grade: " << students[i].disciplines[j].grade << endl;
 				found = true;
 				break;
 			}
@@ -169,7 +170,7 @@ void SearchStudentsByPoorGrades() {
 			}
 		}
 		if (studentFound) {
-			cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].middName << endl;
+			cout << "Faculty Number: " << students[i].facultyNumber << ", Name: " << students[i].firstName << " " << students[i].lastName << endl;
 			found = true;
 		}
 	}
@@ -190,7 +191,7 @@ void LoadStudentsFromFile() {
 	while (!inputFile.eof()) {
 		Students newStudent;
 		inputFile >> newStudent.facultyNumber >> newStudent.socialSecurityNumber
-			>> newStudent.firstName >> newStudent.middName
+			>> newStudent.firstName >> newStudent.lastName
 			>> newStudent.gender >> newStudent.age
 			>> newStudent.status;
 
@@ -221,7 +222,7 @@ void SaveStudentsToFile() {
 		outputFile << students[i].facultyNumber << " "
 			<< students[i].socialSecurityNumber << " "
 			<< students[i].firstName << " "
-			<< students[i].middName << " "
+			<< students[i].lastName << " "
 			<< students[i].gender << " "
 			<< students[i].age << " "
 			<< students[i].status << " ";
@@ -241,7 +242,7 @@ void LoadDataFromFile() {
 
 	if (inputFile.is_open()) {
 		while (inputFile >> students[currentStudents].facultyNumber >> students[currentStudents].socialSecurityNumber
-			>> students[currentStudents].firstName >> students[currentStudents].middName
+			>> students[currentStudents].firstName >> students[currentStudents].lastName
 			>> students[currentStudents].gender >> students[currentStudents].age
 			>> students[currentStudents].status) {
 			for (int i = 0; i < 5; ++i) {
@@ -265,7 +266,7 @@ void SaveDataToFile() {
 	if (outputFile.is_open()) {
 		for (int i = 0; i < currentStudents; ++i) {
 			outputFile << students[i].facultyNumber << " | " << students[i].socialSecurityNumber << " | "
-				<< students[i].firstName << " | " << students[i].middName << " | "
+				<< students[i].firstName << " | " << students[i].lastName << " | "
 				<< students[i].gender << " | " << students[i].age << " | " << students[i].status << "\n";
 
 			for (int j = 0; j < 5; ++j) {
@@ -369,8 +370,8 @@ void AddStudent() {
 			}
 			cout << "Enter first name: " << endl;
 			cin >> newStudent.firstName;
-			cout << "Enter middle name: " << endl;
-			cin >> newStudent.middName;
+			cout << "Enter last name: " << endl;
+			cin >> newStudent.lastName;
 			cout << "Gender?: " << endl;
 			cin >> newStudent.gender;
 			cout << "Enter age: " << endl;
@@ -427,33 +428,14 @@ void DisplayAllStudents() {
 		return;
 	}
 
-	cout << "Students' list:" << endl;
-	cout << "========================================================================================================================================================================================================================================================" << endl;
-	cout << "Faculty #\t| SSN\t| First Name\t| Middle Name\t| Gender\t| Age\t| Status\t| Discipline 1\t| Grade 1\t| Discipline 2\t| Grade 2\t| Discipline 3\t| Grade 3\t| Discipline 4\t| Grade 4\t| Discipline 5\t| Grade 5" << endl;
-	cout << "========================================================================================================================================================================================================================================================" << endl;
-
+	cout << "| Faculty Number | Social Security Number | First Name | Middle Name | Last Name | Gender | Age | Status | Average Grade |" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
-		cout << students[i].facultyNumber << "\t\t| " << students[i].socialSecurityNumber << "\t| "
-			<< students[i].firstName << "\t\t| " << students[i].middName << "\t\t| "
-			<< students[i].gender << "\t\t| " << students[i].age << "\t| "
-			<< students[i].status << "\t| ";
-
-		for (int j = 0; j < 5; ++j) {
-			if (j < 5) {
-				cout << students[i].disciplines[j].name << "\t| " << students[i].disciplines[j].grade;
-				if (j != 4) {
-					cout << "\t| ";
-				}
-			}
-			else {
-				cout << "\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t|\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t|\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t| \t\t| \t|";
-			}
-		}
-		cout << endl;
+		cout << "|" <<setw(10)<<students[i].facultyNumber << "|" << setw(20) << students[i].socialSecurityNumber << "|"
+			<< setw(15) << students[i].firstName << "|" << setw(15) << students[i].lastName << "|" << setw(10) << students[i].gender << "|"
+			<< setw(5) << students[i].age << " |" << setw(10) << students[i].status << " |" << setw(10) << students[i].averageGrade << "|" << endl;
 	}
-
-	cout << "========================================================================================================================================================================================================================================================" << endl;
 }
+
 void DisplayMenu() {
 	cout << "Menu:" << endl;
 	cout << "1. Add a student" << endl;
