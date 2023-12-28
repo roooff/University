@@ -11,14 +11,14 @@ struct Disciplines
 };
 struct Students
 {
-	int facultyNumber = 0;
-	int socialSecurityNumber = 0;
+	int facultyNumber ;
+	int socialSecurityNumber;
 	string firstName;
 	string middName;
 	string gender;
-	int age = 0;
+	int age;
 	string status;
-	float averageGrade = 0.00;
+	double averageGrade = 0.00;
 	Disciplines disciplines[5];
 
 };
