@@ -407,9 +407,9 @@ void AddStudent() {
 
 			for (int i = 0; i < 5; ++i)
 			{
-				cout << "Enter Grade for :" << newStudent.disciplines[i].name << endl;
+				cout << "Enter Grade for : " << newStudent.disciplines[i].name << endl;
 				cin>> newStudent.disciplines[i].grade;
-				cout<<"Grade for" << newStudent.disciplines[i].name << "added succssefully" << endl;
+				cout<<"Grade for " << newStudent.disciplines[i].name << " added succssefully " << endl;
 			}
 
 		}
