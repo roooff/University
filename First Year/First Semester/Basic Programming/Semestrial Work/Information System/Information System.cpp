@@ -1,7 +1,7 @@
 #include <fstream>
+#include<iomanip>
 #include <iostream>
 #include <string>
-#include<iomanip>
 using namespace std;
 int choice;
 
@@ -9,17 +9,17 @@ struct Disciplines
 {
 	string name;
 	int grade = 0;
-}; 
+};
 struct Students
 {
-	int facultyNumber ;
-	int socialSecurityNumber;
+	int facultyNumber = 0;
+	int socialSecurityNumber = 0;
 	string firstName;
 	string lastName;
 	string gender;
-	int age;
+	int age = 0;
 	string status;
-	float averageGrade = 0.00;
+	float gPA = 0.00;
 	Disciplines disciplines[5];
 
 };
@@ -49,7 +49,7 @@ void SelectionSortBySSN(Students arr[], int n) {
 	}
 }
 void DisplayStudents(Students arr[], int count) {
-	cout << "Faculty Number\tSocial Security Number\tFirst Name\tMiddle Name\tGender\tAge\tStatus" << endl;
+	cout << "Faculty Number\tSocial Security Number\tFirst Name\tLast Name\tGender\tAge\tStatus" << endl;
 	for (int i = 0; i < count; ++i) {
 		cout << arr[i].facultyNumber << "\t\t" << arr[i].socialSecurityNumber << "\t\t\t"
 			<< arr[i].firstName << "\t\t" << arr[i].lastName << "\t\t" << arr[i].gender << "\t"
@@ -84,7 +84,7 @@ void FilterAndSortByGPARange() {
 }
 void FilterAndSortByStatus() {
 	string status;
-	cout << "Enter the status (Active/Interrupted/Graduated): ";
+	cout << "Enter the status (Active/lastName/Graduated): ";
 	cin >> status;
 
 	Students filteredStudents[maxStudents];
@@ -244,7 +244,8 @@ void LoadDataFromFile() {
 			for (int i = 0; i < 5; ++i) {
 				inputFile >> students[currentStudents].disciplines[i].name >> students[currentStudents].disciplines[i].grade;
 			}
-			++currentStudents;
+			currentStudents++;
+			cout << "File loaded successfully" << endl;
 			if (currentStudents >= maxStudents) {
 				cout << "Maximum student limit reached!" << endl;
 				break;
@@ -271,7 +272,7 @@ void SaveDataToFile() {
 			outputFile << "\n";
 		}
 		outputFile.close();
-		
+
 	}
 	else {
 		cout << "File could not be created!" << endl;
@@ -281,36 +282,54 @@ void UpdateGradesAndAverage() {
 	int facNumber;
 	cout << "Enter the faculty number of the student: ";
 	cin >> facNumber;
+	for (int i = 0; i < currentStudents; i++)
+	{
+		if (facNumber == students[i].facultyNumber)
+		{
+			if (students[i].status == "Dropped" && students[i].status == "Graduated")
+			{
+				cout << "Student is not activly styding here , can't modify details" << endl;
 
-	bool found = false;
-	for (int i = 0; i < currentStudents; ++i) {
-		if (students[i].facultyNumber == facNumber) {
-			found = true;
-			if (students[i].status == "Active") {
-				float totalGrade = 0.0;
-				int updated = 0;
-				for (int j = 0; j < 5; ++j) {
-					cout << "Enter grade for discipline " << students[i].disciplines[j].name << ": ";
-					int newGrade;
-					cin >> newGrade;
-					if (newGrade >= 2 && newGrade <= 6) {
-						totalGrade += newGrade;
-						students[i].disciplines[j].grade = newGrade;
-						++updated;
+			}
+			else
+			{
+				bool grades = true;
+				while (grades)
+				{
+					for (int j = 0; j < 5; j++)
+					{
+						cout << "Enter Grade for : " << students[i].disciplines[j].name << " between 2-6" << endl;
+						cin >> students[i].disciplines[j].grade;
+						if (students[i].disciplines[j].grade != 2 && students[i].disciplines[j].grade != 3 && students[i].disciplines[i].grade != 4 &&
+							students[i].disciplines[j].grade != 5 && students[i].disciplines[j].grade != 6)
+						{
+							cout << "Invalid grade! Try again." << endl;
+							i--;
+						}
+						else
+						{
+							cout << "Grade for " << students[i].disciplines[i].name << " added succssefully " << endl;
+							grades = false;
+						}
+
 					}
+					float totalGrade = 0.0;
+					for (int j = 0; j < 5; ++j) {
+						totalGrade += students[i].disciplines[j].grade;
+					}
+					students[i].gPA = totalGrade / 5.00;
+					cout<< "GPA now is:"<< students[i].gPA << endl;
 				}
-				students[i].averageGrade = totalGrade / updated;
-				cout << "Updated grades and average grade for student with faculty number " << facNumber << endl;
 			}
-			else {
-				cout << "Cannot update grades. The student's status is not Active." << endl;
-			}
-			break;
+			
+		}
+		else
+		{
+			cout << "Student with faculty number " << facNumber << " not found." << endl;
+			i = currentStudents;
 		}
 	}
-	if (!found) {
-		cout << "Student with faculty number " << facNumber << " not found." << endl;
-	}
+ 
 }
 void ChangeStatusByFacultyNumber() {
 	int facNumber;
@@ -323,9 +342,9 @@ void ChangeStatusByFacultyNumber() {
 			found = true;
 			if (students[i].status != "Graduated") {
 				string newStatus;
-				cout << "Enter the new status (Active/Interrupted/Graduated): ";
+				cout << "Enter the new status (Active/Dropped/Graduated): ";
 				cin >> newStatus;
-				if (newStatus == "Active" || newStatus == "Interrupted") {
+				if (newStatus == "Active" || newStatus == "Dropped") {
 					students[i].status = newStatus;
 					cout << "Status updated for student with faculty number " << facNumber << endl;
 				}
@@ -353,18 +372,35 @@ void AddStudent() {
 			Students newStudent;
 			cout << "Enter faculty number: " << endl;
 			cin >> newStudent.facultyNumber;
-			cout << "Enter social security number: " << endl;
-			cin >> newStudent.socialSecurityNumber;
-			for (int i = 0; i <currentStudents; i++)
+			bool sSN = true;
+			while (sSN)
 			{
-				if (newStudent.socialSecurityNumber == students[i].socialSecurityNumber)
+				cout << "Enter social security number: " << endl;
+				cin >> newStudent.socialSecurityNumber;
+				if (currentStudents ==0)
 				{
-					cout << "This social security number already exists!" << endl;
-					cout << "Enter social security number: " << endl;
-					cin >> newStudent.socialSecurityNumber;
-
+					sSN = false;
+					break;
 				}
+				for (int i = 0; i < currentStudents; i++)
+				{
+					if (newStudent.socialSecurityNumber == students[i].socialSecurityNumber)
+					{
+						cout << "This social security number already exists! Try again." << endl;
+						break;
+
+					}
+					else
+					{
+						cout << "Social security number added successfully!" << endl;
+						sSN = false;
+					}
+					
+				}
+					
+				
 			}
+
 			cout << "Enter first name: " << endl;
 			cin >> newStudent.firstName;
 			cout << "Enter last name: " << endl;
@@ -373,28 +409,22 @@ void AddStudent() {
 			cin >> newStudent.gender;
 			cout << "Enter age: " << endl;
 			cin >> newStudent.age;
-			int status = 0;
-			cout << "Enter status: Active-1|Dropped out-2|Graduated-3 " << endl;\
-			cin >> status;
-			switch (status)
+			bool status = true;
+			while (status)
 			{
-				case 1:
-					newStudent.status = "Active";
-					break;
-				case 2:
-					newStudent.status = "Dropped out";
-					break;
-				case 3:
-					newStudent.status = "Graduated";
-				break;
-			default: 
-				cout << "Invalid choice, status becomes Empty" << endl;
-					newStudent.status = "Empty";
-				break;
-			}
-			cin >> newStudent.status;
+				cout << "Enter status: Active|Dropped|Graduated" << endl;
+				cin >> newStudent.status;
+				if (newStudent.status != "Active" && newStudent.status != "Dropped" && newStudent.status != "Graduated")
+				{
+					cout << "Invalid status, try again:" << endl;
 
-			
+				}
+				else
+				{
+					cout << "Status added successfully! " << endl;
+					status = false;
+				}
+			}
 			students[currentStudents] = newStudent;
 			currentStudents++;
 			cout << "Student added successfully!" << endl;
@@ -404,13 +434,28 @@ void AddStudent() {
 			newStudent.disciplines[2].name = "English";
 			newStudent.disciplines[3].name = "Digital Logic";
 			newStudent.disciplines[4].name = "Electronics";
-
-			for (int i = 0; i < 5; ++i)
+			bool grade = true;
+			while (grade)
 			{
-				cout << "Enter Grade for : " << newStudent.disciplines[i].name << endl;
-				cin>> newStudent.disciplines[i].grade;
-				cout<<"Grade for " << newStudent.disciplines[i].name << " added succssefully " << endl;
+				for (int i = 0; i < 5; ++i)
+				{
+					cout << "Enter Grade for : " << newStudent.disciplines[i].name << " between 2-6" << endl;
+					cin >> newStudent.disciplines[i].grade;
+					if (newStudent.disciplines[i].grade != 2&& newStudent.disciplines[i].grade != 3 && newStudent.disciplines[i].grade != 4 &&
+						newStudent.disciplines[i].grade != 5 && newStudent.disciplines[i].grade != 6 )
+					{
+						cout << "Invalid grade! Try again." << endl;
+						i--;
+					}
+					else
+					{
+						cout << "Grade for " << newStudent.disciplines[i].name << " added succssefully " << endl;
+						grade = false;
+					}
+					
+				}
 			}
+			
 
 		}
 		else {
@@ -425,11 +470,11 @@ void DisplayAllStudents() {
 		return;
 	}
 
-	cout << "| Faculty Number | Social Security Number | First Name | Middle Name | Last Name | Gender | Age | Status | Average Grade |" << endl;
+	cout << "| Faculty Number | Social Security Number | First Name | Last Name | Gender | Age | Status | Average Grade |" << endl;
 	for (int i = 0; i < currentStudents; ++i) {
-		cout << "|" <<setw(10)<<students[i].facultyNumber << "|" << setw(20) << students[i].socialSecurityNumber << "|"
+		cout << "|" << setw(10) << students[i].facultyNumber << "|" << setw(20) << students[i].socialSecurityNumber << "|"
 			<< setw(15) << students[i].firstName << "|" << setw(15) << students[i].lastName << "|" << setw(10) << students[i].gender << "|"
-			<< setw(5) << students[i].age << " |" << setw(10) << students[i].status << " |" << setw(10) << students[i].averageGrade << "|" << endl;
+			<< setw(5) << students[i].age << " |" << setw(10) << students[i].status << " |" << setw(10) << students[i].gPA << "|" << endl;
 	}
 } // DONE
 void DisplayMenu() {
