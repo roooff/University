@@ -4,7 +4,6 @@
 #include <string>
 using namespace std;
 int choice;
-
 struct Disciplines
 {
 	string name;
@@ -175,107 +174,59 @@ void SearchStudentsByPoorGrades() {
 		cout << "No students found with at least one subject graded as " << weakGrade << endl;
 	}
 }
-void LoadStudentsFromFile() {
-	ifstream inputFile("C:\\Users\\rooof\\Documents\\load_students.txt");
-
-	if (!inputFile.is_open()) {
-		cout << "Error opening the file!" << endl;
-		return;
-	}
-
-
-	while (!inputFile.eof()) {
-		Students newStudent;
-		inputFile >> newStudent.facultyNumber >> newStudent.socialSecurityNumber
-			>> newStudent.firstName >> newStudent.lastName
-			>> newStudent.gender >> newStudent.age
-			>> newStudent.status;
-
-		for (int i = 0; i < 5; ++i) {
-			inputFile >> newStudent.disciplines[i].name >> newStudent.disciplines[i].grade;
-		}
-
-
-		if (!inputFile.fail()) {
-			students[currentStudents] = newStudent;
-			currentStudents++;
-		}
-	}
-
-	inputFile.close();
-	cout << "Students' information loaded from the file 'students.txt'." << endl;
-}
 void SaveStudentsToFile() {
-	ofstream outputFile("C:\\Users\\rooof\\Documents\\save_students.txt");
+	ofstream outFile("save_students.txt");
 
-	if (!outputFile.is_open()) {
-		cout << "Error opening the file!" << endl;
-		return;
-	}
-
-
-	for (int i = 0; i < currentStudents; ++i) {
-		outputFile << students[i].facultyNumber << " "
-			<< students[i].socialSecurityNumber << " "
-			<< students[i].firstName << " "
-			<< students[i].lastName << " "
-			<< students[i].gender << " "
-			<< students[i].age << " "
-			<< students[i].status << " ";
-
-		for (int j = 0; j < 5; ++j) {
-			outputFile << students[i].disciplines[j].name << " "
-				<< students[i].disciplines[j].grade << " ";
-		}
-		outputFile << endl;
-	}
-
-	outputFile.close();
-	cout << "Students' information saved to the file 'students.txt'." << endl;
-}
-void LoadDataFromFile() {
-	ifstream inputFile("C:\\Users\\rooof\\Documents\\load_students.txt");
-
-	if (inputFile.is_open()) {
-		while (inputFile >> students[currentStudents].facultyNumber >> students[currentStudents].socialSecurityNumber
-			>> students[currentStudents].firstName >> students[currentStudents].lastName
-			>> students[currentStudents].gender >> students[currentStudents].age
-			>> students[currentStudents].status) {
-			for (int i = 0; i < 5; ++i) {
-				inputFile >> students[currentStudents].disciplines[i].name >> students[currentStudents].disciplines[i].grade;
-			}
-			currentStudents++;
-			cout << "File loaded successfully" << endl;
-			if (currentStudents >= maxStudents) {
-				cout << "Maximum student limit reached!" << endl;
-				break;
-			}
-		}
-		inputFile.close();
-	}
-	else {
-		cout << "File not found or could not be opened!" << endl;
-	}
-}
-void SaveDataToFile() {
-	ofstream outputFile("C:\\Users\\rooof\\Documents\\save_students.txt");
-
-	if (outputFile.is_open()) {
+	if (outFile.is_open()) {
 		for (int i = 0; i < currentStudents; ++i) {
-			outputFile << students[i].facultyNumber << " | " << students[i].socialSecurityNumber << " | "
-				<< students[i].firstName << " | " << students[i].lastName << " | "
-				<< students[i].gender << " | " << students[i].age << " | " << students[i].status << "\n";
+			outFile << students[i].facultyNumber << " "
+				<< students[i].socialSecurityNumber << " "
+				<< students[i].firstName << " "
+				<< students[i].lastName << " "
+				<< students[i].gender << " "
+				<< students[i].age << " "
+				<< students[i].status << " "
+				<< students[i].gPA << " ";
 
 			for (int j = 0; j < 5; ++j) {
-				outputFile << students[i].disciplines[j].name << " | " << students[i].disciplines[j].grade << " | ";
+				outFile << students[i].disciplines[j].name << " "
+					<< students[i].disciplines[j].grade << " ";
 			}
-			outputFile << "\n";
+			outFile << endl;
 		}
-		outputFile.close();
-
+		outFile.close();
+		cout << "Student data saved to file successfully." << endl;
 	}
 	else {
-		cout << "File could not be created!" << endl;
+		cout << "Unable to open file." << endl;
+	}
+}
+void LoadStudentsFromFile() {
+	ifstream inFile("load_students.txt");
+
+	if (inFile.is_open()) {
+		currentStudents = 0;
+		while (!inFile.eof() && currentStudents < maxStudents) {
+			inFile >> students[currentStudents].facultyNumber
+				>> students[currentStudents].socialSecurityNumber
+				>> students[currentStudents].firstName
+				>> students[currentStudents].lastName
+				>> students[currentStudents].gender
+				>> students[currentStudents].age
+				>> students[currentStudents].status
+				>> students[currentStudents].gPA;
+
+			for (int j = 0; j < 5; ++j) {
+				inFile >> students[currentStudents].disciplines[j].name
+					>> students[currentStudents].disciplines[j].grade;
+			}
+			currentStudents++;
+		}
+		inFile.close();
+		cout << "Student data loaded from file successfully." << endl;
+	}
+	else {
+		cout << "Unable to open file." << endl;
 	}
 }
 void UpdateGradesAndAverage() {
@@ -492,15 +443,14 @@ void DisplayMenu() {
 	cout << "11. Change status for a student" << endl;
 }
 int main() {
-	LoadDataFromFile();
+	LoadStudentsFromFile();
 	char choice = '0';
 
 	while (choice != '6') {
 		DisplayMenu();
 		cout << "Enter your choice: ";
 		cin >> choice;
-
-		switch (choice) {
+switch (choice) {
 		case '1':
 			AddStudent();
 			break;
@@ -517,11 +467,11 @@ int main() {
 			SortStudentsByMiddleName();
 			break;
 		case '6':
-			SaveStudentsToFile();
+			LoadStudentsFromFile();
 			cout << "Exiting the program. Goodbye!" << endl;
 			break;
 		case '7':
-			LoadStudentsFromFile();
+			SaveStudentsToFile();
 			break;
 
 		case '8':
@@ -543,6 +493,6 @@ int main() {
 			break;
 		}
 	}
-	atexit(SaveDataToFile);
+	atexit(SaveStudentsToFile);
 	return 0;
 }
