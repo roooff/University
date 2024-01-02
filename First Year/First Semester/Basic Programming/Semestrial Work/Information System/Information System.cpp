@@ -321,35 +321,39 @@ void AddStudent() {
 	for (int k = 0; k < studentsToAdd; ++k) {
 		if (currentStudents < maxStudents) {
 			Students newStudent;
-			cout << "Enter faculty number: " << endl;
-			cin >> newStudent.facultyNumber;
-			bool sSN = true;
-			while (sSN)
-			{
+			
+			do {
+				cout << "Enter faculty number: " << endl;
+				cin >> newStudent.facultyNumber;
+
+				// Check for duplicate faculty number
+				bool facultyExists = false;
+				for (int i = 0; i < currentStudents; i++) {
+					if (newStudent.facultyNumber == students[i].facultyNumber) {
+						cout << "This faculty number already exists! Try again." << endl;
+						facultyExists = true;
+						break;
+					}
+				}
+				if (facultyExists) {
+					continue; // Restart the loop for a new faculty number
+				}
+				break; // Break out of the loop if faculty number is unique
+			} while (true);
+			bool sSNExists = true;
+			while (sSNExists) {
 				cout << "Enter social security number: " << endl;
 				cin >> newStudent.socialSecurityNumber;
-				if (currentStudents ==0)
-				{
-					sSN = false;
-					break;
-				}
-				for (int i = 0; i < currentStudents; i++)
-				{
-					if (newStudent.socialSecurityNumber == students[i].socialSecurityNumber)
-					{
-						cout << "This social security number already exists! Try again." << endl;
-						break;
+				sSNExists = false;
 
-					}
-					else
-					{
-						cout << "Social security number added successfully!" << endl;
-						sSN = false;
+				for (int i = 0; i < currentStudents; i++) {
+					if (newStudent.socialSecurityNumber == students[i].socialSecurityNumber) {
+						cout << "This social security number already exists! Try again." << endl;
+						sSNExists = true;
+						break;
 					}
 					
 				}
-					
-				
 			}
 
 			cout << "Enter first name: " << endl;
