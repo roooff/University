@@ -202,7 +202,7 @@ void SaveStudentsToFile() {
 	}
 }
 void LoadStudentsFromFile() {
-	ifstream inFile("load_students.txt");
+	ifstream inFile("save_students.txt");
 
 	if (inFile.is_open()) {
 		currentStudents = 0;
@@ -276,6 +276,7 @@ void UpdateGradesAndAverage() {
 		}
 		else
 		{
+
 			cout << "Student with faculty number " << facNumber << " not found." << endl;
 			i = currentStudents;
 		}
@@ -389,9 +390,8 @@ void AddStudent() {
 			newStudent.disciplines[2].name = "English";
 			newStudent.disciplines[3].name = "Digital Logic";
 			newStudent.disciplines[4].name = "Electronics";
-			bool grade = true;
-			while (grade)
-			{
+			
+			int grade = 0;
 				for (int i = 0; i < 5; ++i)
 				{
 					cout << "Enter Grade for : " << newStudent.disciplines[i].name << " between 2-6" << endl;
@@ -405,11 +405,12 @@ void AddStudent() {
 					else
 					{
 						cout << "Grade for " << newStudent.disciplines[i].name << " added succssefully " << endl;
-						grade = false;
+						grade += newStudent.disciplines[i].grade;
+						
 					}
 					
 				}
-			}
+				newStudent.gPA = grade / 5.00;
 			
 
 		}
