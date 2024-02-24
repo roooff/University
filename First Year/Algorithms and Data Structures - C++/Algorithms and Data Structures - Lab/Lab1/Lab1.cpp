@@ -1,20 +1,80 @@
-// Lab1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
-#include <iostream>
-
+﻿#include <iostream>
+using namespace std;
 int main()
 {
-    std::cout << "Hello World!\n";
-}
+	// Declaring arrays and marker
+	int marker = 9;
+	int  a[2][2];
+	
+	
+	cout  << "2D Array Input: " << endl;
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			cout << "Array[" << i << "][" << j << "]=  ";
+			cin >> a[i][j];
+		}
+	}
+	
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+	for (int  i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			//Right & Left
+			if (j==0 && j<2 )
+			{
+				if (a[i][j] == a[i][j+1])
+				{
+					a[i][j] = marker;
+					a[i][j + 1] = marker;
+				}
+				if (j!=0)
+				{
+					if (a[i][j] == a[i][j - 1])
+					{
+						a[i][j] = marker;
+						a[i][j - 1] = marker;
+					}
+				}
+				
+			}
+			//Up & Down
+				if (i>-1 && i <2)
+				{
+					if (a[i][j] == a[i+1][j])
+					{
+						a[i][j] = marker;
+						a[i + 1][j] = marker;
+						
+					}
+					if (i> 0)
+					{
+						if (a[i][j] == a[i - 1][j])
+						{
+							a[i - 1][j] = marker;
+							a[i][j] = marker;
+							
+						}
+					}
+				}
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+				marker++;
+		}
+			
+			
+	}
+		
+		cout<< "2D Array Output: " << endl;
+		for (int i = 0; i < 2; i++)
+		{
+			for (int j = 0; j < 2; j++)
+			{
+				cout << "\t" << a[i][j];
+			}
+			cout << endl;
+		}
+	}
+	
+
