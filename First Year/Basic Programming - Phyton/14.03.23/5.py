@@ -1,2 +1,2 @@
-board = [2][2]
-user_input = input("Enter a starting point ")
+board = {0, 0, 0, 0, 0, 0, 0, 0, 0}
+user_input = input("Enter your starting position")
